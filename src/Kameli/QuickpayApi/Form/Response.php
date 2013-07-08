@@ -88,7 +88,7 @@ class Response
         }
 
         if (array_key_exists($key, $this->custom)) {
-            return $this->response[$key];
+            return $this->custom[$key];
         }
 
         return null;
