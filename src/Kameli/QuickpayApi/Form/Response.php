@@ -95,6 +95,15 @@ class Response
     }
 
     /**
+     * Get the order number
+     * @return mixed
+     */
+    public function getOrderNumber()
+    {
+        return $this->get('ordernumber');
+    }
+
+    /**
      * Check if the request was successful
      * @return bool
      */
