@@ -113,6 +113,33 @@ class Response
     }
 
     /**
+     * Get the expiration date from the used credit card
+     * @return string
+     */
+    public function getCardExpire()
+    {
+        return $this->get('cardexpire');
+    }
+
+    /**
+     * Get the card number from the used credit card
+     * @return string
+     */
+    public function getCardNumber()
+    {
+        return $this->get('cardnumber');
+    }
+
+    /**
+     * Get the used credit card type
+     * @return string
+     */
+    public function getCardType()
+    {
+        return $this->get('cardtype');
+    }
+
+    /**
      * Check if the request was successful
      * @return bool
      */
