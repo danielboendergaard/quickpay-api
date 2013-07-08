@@ -104,6 +104,15 @@ class Response
     }
 
     /**
+     * Get the transaction number
+     * @return mixed
+     */
+    public function getTransaction()
+    {
+        return $this->get('transaction');
+    }
+
+    /**
      * Check if the request was successful
      * @return bool
      */
