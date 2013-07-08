@@ -1,0 +1,23 @@
+{
+    "name": "kameli/quickpay-api",
+    "description": "",
+    "authors": [
+        {
+            "name": "Daniel Bøndergaard",
+            "email": "danielboendergaard@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Kameli\\QuickpayApi": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
