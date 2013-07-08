@@ -27,7 +27,11 @@
  */
 class Response
 {
-	protected static $__md5checkFields = array(
+    /**
+     * Fields used for md5 check
+     * @var array
+     */
+    protected static $md5checkFields = array(
 		'msgtype',
 		'ordernumber',
 		'amount',
@@ -51,59 +55,91 @@ class Response
 		'fraudremarks',
 		'fraudreport',
 		'fee'
-		);
+    );
 
-    protected $_response;
+    /**
+     * The response array
+     * @var array
+     */
+    protected $response;
 
+    /**
+     * The custom variables
+     * @var array
+     */
+    protected $custom = array();
+
+    /**
+     * Make a response object from the callback
+     * @param array $post
+     */
     public function __construct($post) {
-        $this->_response = $this->_parsePost($post);
+        $this->response = $this->parsePost($post);
     }
 
+    /**
+     * Get a value from the response
+     * @param string $key
+     * @return mixed
+     */
     public function get($key) {
-    	return $this->_response[$key];
+        if (array_key_exists($key, $this->response)) {
+            return $this->response[$key];
+        }
+
+        if (array_key_exists($key, $this->custom)) {
+            return $this->response[$key];
+        }
+
+        return null;
     }
 
-
+    /**
+     * Check if the request was successful
+     * @return bool
+     */
     public function isSuccess() {
-        return $this->_response['qpstat'] == '000';
+        return $this->get('qpstat') == '000';
     }
 
+    /**
+     * Check if the request was valid
+     * @param string $md5check
+     * @return bool
+     */
     public function isValid($md5check) {
         $md5string = '';
-        foreach(static::$__md5checkFields as $key) {
-            if(array_key_exists($key, $this->_response)) {
-                $md5string .= $this->_response[$key];
+
+        foreach(static::$md5checkFields as $key) {
+            if (array_key_exists($key, $this->response)) {
+                $md5string .= $this->response[$key];
             }
         }
-        return strcmp($this->_response['md5check'],md5($md5string . $md5check)) === 0;
+
+        return strcmp($this->response['md5check'],md5($md5string . $md5check)) === 0;
     }
 
-    protected function _parsePost($post) {
-        return array(
-            'msgtype' => isset($post['msgtype']) ? $post['msgtype'] : null,
-            'ordernumber' => isset($post['ordernumber']) ? $post['ordernumber'] : null,
-            'amount' => isset($post['amount']) ? $post['amount'] : null,
-            'currency' => isset($post['currency']) ? $post['currency'] : null,
-            'time' => isset($post['time']) ? $post['time'] : null,
-            'state' => isset($post['state']) ? $post['state'] : null,
-            'qpstat' => isset($post['qpstat']) ? $post['qpstat'] : null,
-            'qpstatmsg' => isset($post['qpstatmsg']) ? $post['qpstatmsg'] : null,
-            'chstat' => isset($post['chstat']) ? $post['chstat'] : null,
-            'chstatmsg' => isset($post['chstatmsg']) ? $post['chstatmsg'] : null,
-            'merchant' => isset($post['merchant']) ? $post['merchant'] : null,
-            'merchantemail' => isset($post['merchantemail']) ? $post['merchantemail'] : null,
-            'transaction' => isset($post['transaction']) ? $post['transaction'] : null,
-            'cardtype' => isset($post['cardtype']) ? $post['cardtype'] : null,
-            'cardnumber' => isset($post['cardnumber']) ? $post['cardnumber'] : null,
-            'cardhash' => isset($post['cardhash']) ? $post['cardhash'] : null,
-            'cardexpire' => isset($post['cardexpire']) ? $post['cardexpire'] : null,
-            'acquirer' => isset($post['acquirer']) ? $post['acquirer'] : null,
-            'splitpayment' => isset($post['splitpayment']) ? $post['splitpayment'] : null,
-            'fraudprobability' => isset($post['fraudprobability']) ? $post['fraudprobability'] : null,
-            'fraudremarks' => isset($post['fraudremarks']) ? $post['fraudremarks'] : null,
-            'fraudreport' => isset($post['fraudreport']) ? $post['fraudreport'] : null,
-            'fee' => isset($post['fee']) ? $post['fee'] : null,
-            'md5check' => isset($post['md5check']) ? $post['md5check'] : null,
-        );
+    /**
+     * Parse the POST data
+     * @param array $post
+     * @return array
+     */
+    protected function parsePost($post) {
+
+        $response = array();
+
+        // Parse the md5 checked fields
+        foreach (array_merge(static::$md5checkFields, array('md5check')) as $name) {
+            $response[$name] = isset($post[$name]) ? $post[$name] : null;
+        }
+
+        // Parse custom variables
+        foreach ($post as $name => $value) {
+            if (strpos($name, 'CUSTOM_') === 0 and strlen($name) > 7) {
+                $this->custom[substr($name, 7)] = $value;
+            }
+        }
+
+        return $response;
     }
 }
