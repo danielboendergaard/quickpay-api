@@ -1,12 +1,6 @@
 <?php
 
 require_once 'config.php.dist';
-require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Authorize.php';
-require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Cancel.php';
-require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Capture.php';
-require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Recurring.php';
-require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Subscribe.php';
-require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Refund.php';
 
 use Kameli\QuickpayApi\Request\Authorize;
 use Kameli\QuickpayApi\Request\Cancel;

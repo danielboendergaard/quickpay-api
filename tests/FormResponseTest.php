@@ -1,7 +1,6 @@
 <?php
 
 require_once 'config.php.dist';
-require_once __DIR__.'/../src/Kameli/QuickpayApi/Form/Response.php';
 
 use Kameli\QuickpayApi\Form\Response;
 
