@@ -1,6 +1,6 @@
 {
     "name": "kameli/quickpay-api",
-    "description": "",
+    "description": "An API to communicate with the Danish payment gateway Quickpay",
     "authors": [
         {
             "name": "Daniel Bøndergaard",
@@ -12,9 +12,6 @@
         "illuminate/support": "4.0.x"
     },
     "autoload": {
-        "classmap": [
-            "src/migrations"
-        ],
         "psr-0": {
             "Kameli\\QuickpayApi": "src/"
         }
