@@ -1,17 +1,24 @@
 <?php
 
-require_once 'config.php';
-require_once 'QuickPay/PaymentAPI/Request/Authorize.php';
-require_once 'QuickPay/PaymentAPI/Request/Capture.php';
-require_once 'QuickPay/PaymentAPI/Request/Cancel.php';
-require_once 'QuickPay/PaymentAPI/Request/Refund.php';
-require_once 'QuickPay/PaymentAPI/Request/Subscribe.php';
-require_once 'QuickPay/PaymentAPI/Request/Recurring.php';
+require_once 'config.php.dist';
+require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Authorize.php';
+require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Cancel.php';
+require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Capture.php';
+require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Recurring.php';
+require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Subscribe.php';
+require_once __DIR__.'/../src/Kameli/QuickpayApi/Request/Refund.php';
+
+use Kameli\QuickpayApi\Request\Authorize;
+use Kameli\QuickpayApi\Request\Cancel;
+use Kameli\QuickpayApi\Request\Capture;
+use Kameli\QuickpayApi\Request\Recurring;
+use Kameli\QuickpayApi\Request\Subscribe;
+use Kameli\QuickpayApi\Request\Refund;
 
 class PaymentAPITest extends PHPUnit_Framework_TestCase
 {
     protected function stdAuthorize() {
-        $auth = new \QuickPay\PaymentAPI\Request\Authorize(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $auth = new Authorize(QuickPayID,MD5Check,APIURL,VERIFYSSL);
         $response = $auth->setAPIKey(APIKEY)
             ->setOrderNumber('A'. $this->createOrdernumber())
             ->setAmount(234)
@@ -29,7 +36,7 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
     }
 
     protected function stdSubscribe() {
-        $auth = new \QuickPay\PaymentAPI\Request\Subscribe(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $auth = new Subscribe(QuickPayID,MD5Check,APIURL,VERIFYSSL);
         $response = $auth->setAPIKey(APIKEY)
             ->setOrderNumber('S'.$this->createOrdernumber())
             ->setCurrency('DKK')
@@ -48,7 +55,7 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
 
     protected function stdCapture() {
         $auth = $this->stdAuthorize();
-        $capture = new \QuickPay\PaymentAPI\Request\Capture(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $capture = new Capture(QuickPayID,MD5Check,APIURL,VERIFYSSL);
         $response = $capture->setAPIKey(APIKEY)
             ->setTransaction($auth->get('transaction'))
             ->setAmount(234)
@@ -64,7 +71,7 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
     }
 
     public function testCardHashAuthorize() {
-    	$auth = new \QuickPay\PaymentAPI\Request\Authorize(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+    	$auth = new Authorize(QuickPayID,MD5Check,APIURL,VERIFYSSL);
         $response = $auth->setAPIKey(APIKEY)
             ->setOrderNumber('A'. $this->createOrdernumber())
             ->setAmount(234)
@@ -87,7 +94,7 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
 
     public function testCancel() {
         $auth = $this->stdAuthorize();
-        $cancel = new \QuickPay\PaymentAPI\Request\Cancel(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $cancel = new Cancel(QuickPayID,MD5Check,APIURL,VERIFYSSL);
         $response = $cancel->setAPIKey(APIKEY)
             ->setTransaction($auth->get('transaction'))
             ->send();
@@ -98,7 +105,7 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
 
     public function testRefund() {
         $capture = $this->stdCapture();
-        $refund = new \QuickPay\PaymentAPI\Request\Refund(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $refund = new Refund(QuickPayID,MD5Check,APIURL,VERIFYSSL);
         $response = $refund->setAPIKey(APIKEY)
             ->setTransaction($capture->get('transaction'))
             ->setAmount(234)
@@ -110,7 +117,7 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
 
     public function testRecurring() {
         $subscribe = $this->stdSubscribe();
-        $recurring =new \QuickPay\PaymentAPI\Request\Recurring(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+        $recurring = new Recurring(QuickPayID,MD5Check,APIURL,VERIFYSSL);
         $response = $recurring->setAPIKey(APIKEY)
             ->setTransaction($subscribe->get('transaction'))
             ->setOrderNumber('R'.$this->createOrdernumber())
@@ -124,7 +131,7 @@ class PaymentAPITest extends PHPUnit_Framework_TestCase
     }
 
     public function testInvalidRequest() {
-    	$auth = new \QuickPay\PaymentAPI\Request\Authorize(QuickPayID,MD5Check,APIURL,VERIFYSSL);
+    	$auth = new Authorize(QuickPayID,MD5Check,APIURL,VERIFYSSL);
         $response = $auth->setAPIKey(APIKEY)
             ->setOrderNumber('1')
             ->setAmount(234)

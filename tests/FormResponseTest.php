@@ -1,7 +1,9 @@
 <?php
 
-require_once 'config.php';
-require_once 'QuickPay/Form/Response.php';
+require_once 'config.php.dist';
+require_once __DIR__.'/../src/Kameli/QuickpayApi/Form/Response.php';
+
+use Kameli\QuickpayApi\Form\Response;
 
 class FormResponseTest extends PHPUnit_Framework_TestCase
 {
@@ -33,7 +35,7 @@ class FormResponseTest extends PHPUnit_Framework_TestCase
 			'md5check'=>'2648243046d9192821f18e344b42f827'
 			);
 
-		$response = new QuickPay\Form\Response($post);
+		$response = new Response($post);
 
 		$this->assertTrue($response->isValid('test'));
 	}
@@ -66,7 +68,7 @@ class FormResponseTest extends PHPUnit_Framework_TestCase
 			'md5check'=>'875924946fa6763d7cfffcbc16635228'
 			);
 
-		$response = new QuickPay\Form\Response($post);
+		$response = new Response($post);
 
 		$this->assertTrue($response->isValid('test'));
 	}
@@ -99,7 +101,7 @@ class FormResponseTest extends PHPUnit_Framework_TestCase
 			'fee'=>'0',
 			'md5check'=>'35f4f76e1c9f60ad5a566aea4dc02c6b'
 			);
-		$response = new QuickPay\Form\Response($post);
+		$response = new Response($post);
 
 		$this->assertTrue($response->isValid('test'));
 	}
@@ -132,7 +134,7 @@ class FormResponseTest extends PHPUnit_Framework_TestCase
 			'fee'=>'0',
 			'md5check'=>'451c540ee054acb7c50aaa692367e47e'
 			);
-		$response = new QuickPay\Form\Response($post);
+		$response = new Response($post);
 		$this->assertTrue($response->isValid('test'));
 	}
 }
