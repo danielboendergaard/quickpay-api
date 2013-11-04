@@ -2,21 +2,52 @@
 
 abstract class Builder
 {
-    const ACTION = 'https://secure.quickpay.dk/form/';
+    /**
+     * The URL for the form action
+     */
+    const FORM_ACTION = 'https://secure.quickpay.dk/form/';
 
-    protected $testmode = 0;
-
-    protected $merchant;
-
+    /**
+     * The protocol version
+     * @var int
+     */
     protected $protocol = 7;
 
+    /**
+     * Test mode status
+     * @var int
+     */
+    protected $testmode = 0;
+
+    /**
+     * The Quickpay ID
+     * @var int
+     */
+    protected $merchant;
+
+    /**
+     * The md5 checksum
+     * @var string
+     */
     protected $md5Check;
 
-    public $fields = [];
+    /**
+     * The form fields
+     * @var array
+     */
+    protected $fields = [];
 
-    public $customFields = [];
+    /**
+     * The custom form fields
+     * @var array
+     */
+    protected $customFields = [];
 
-	protected static $md5checkFields = array(
+    /**
+     * The fields to include in the md5 checksum
+     * @var array
+     */
+    protected static $md5checkFields = array(
         'protocol',
         'msgtype',
         'merchant',
@@ -39,31 +70,131 @@ abstract class Builder
         'cardhash'
     );
 
+    /**
+     * Make a new form builder object from the Quickpay account information
+     * @param int $quickpayID
+     * @param string $md5check
+     */
     public function __construct($quickpayID, $md5check) {
         $this->merchant = $quickpayID;
         $this->md5Check = $md5check;
     }
 
-    public function getAction()
-    {
-        return static::ACTION;
+    /**
+     * Get the form action
+     * @return string
+     */
+    public function getAction() {
+        return static::FORM_ACTION;
     }
 
-    public function setField($name, $value)
-    {
+    /**
+     * Set the language on the payment gateway
+     * @param string $code
+     * @return $this
+     */
+    public function setLanguage($code) {
+        $this->setField('language', $code);
+
+        return $this;
+    }
+
+    /**
+     * Set the order number
+     * @param string $ordernumber
+     * @return $this
+     */
+    public function setOrdernumber($ordernumber) {
+        $this->setField('ordernumber', $ordernumber);
+
+        return $this;
+    }
+
+    /**
+     * Set the amount in it's smallest unit 1,23 DKK is 123
+     * @param int $amount
+     * @return $this
+     */
+    public function setAmount($amount) {
+        $this->setField('amount', $amount);
+
+        return $this;
+    }
+
+    /**
+     * Set the currency
+     * @param string $currency
+     * @return $this
+     */
+    public function setCurrency($currency) {
+        $this->setField('currency', $currency);
+
+        return $this;
+    }
+
+    /**
+     * Set the url to redirect to after a successful transaction
+     * @param string $url
+     * @return $this
+     */
+    public function setContinueUrl($url) {
+        $this->setField('continueurl', $url);
+
+        return $this;
+    }
+
+    /**
+     * Set the url to redirect to after a cancelled transaction
+     * @param string $url
+     * @return $this
+     */
+    public function setCancelUrl($url) {
+        $this->setField('cancelurl', $url);
+
+        return $this;
+    }
+
+    /**
+     * Set the callback url to
+     * @param string $url
+     * @return $this
+     */
+    public function setCallbackUrl($url) {
+        $this->setField('callbackurl', $url);
+
+        return $this;
+    }
+
+    /**
+     * Set a field value
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function setField($name, $value) {
         $this->fields[$name] = $value;
+
+        return $this;
     }
 
-    public function setFields($inputFields)
-    {
+    /**
+     * Set the fields from an array of attributes
+     * @param array $inputFields
+     * @return $this
+     */
+    public function setFields($inputFields) {
         foreach ($inputFields as $key => $value)
         {
-            $this->fields[$key] = $value;
+            $this->setField($key, $value);
         }
+
+        return $this;
     }
 
-    protected function prepareFields()
-    {
+    /**
+     * Prepare the fields and calculate the md5 checksum
+     */
+    protected function prepareFields() {
         $reservedFields = array('protocol', 'merchant', 'testmode');
 
         foreach ($reservedFields as $field) {
@@ -84,23 +215,40 @@ abstract class Builder
         $this->fields = $sorted;
     }
 
-    public function getFields($xhtml = false)
-    {
+    /**
+     * Get the form fields
+     * @return string
+     */
+    public function getFields() {
         $this->prepareFields();
 
         $html = '';
-        $html_end = ($xhtml) ? ' />' : '>';
 
         foreach(array_merge($this->fields, $this->customFields) as $key => $value)
         {
-            $html .= '<input type="hidden" name="'.$key.'" value="'.$value.'"'.$html_end;
+            $html .= '<input type="hidden" name="'.$key.'" value="'.$value.'">';
         }
 
         return $html;
     }
 
-    public function setCustom($name, $value)
-    {
+    /**
+     * Alias for getFields
+     * @return string
+     */
+    public function getFormFields() {
+        return $this->getFields();
+    }
+
+    /**
+     * Set a custom field value
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function setCustom($name, $value) {
         $this->customFields['CUSTOM_'.$name] = $value;
+
+        return $this;
     }
 }
