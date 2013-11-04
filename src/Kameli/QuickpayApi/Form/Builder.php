@@ -166,6 +166,37 @@ abstract class Builder
     }
 
     /**
+     * Set the description
+     * @param string $description
+     * @return $this
+     */
+    public function setDescription($description) {
+        $this->setField('description', $description);
+
+        return $this;
+    }
+
+    /**
+     * Enable auto capture
+     * @return $this
+     */
+    public function enableAutocapture() {
+        $this->setField('autocapture', 1);
+
+        return $this;
+    }
+
+    /**
+     * Enable test mode
+     * @return $this
+     */
+    public function enableTestmode() {
+        $this->testmode = 1;
+
+        return $this;
+    }
+
+    /**
      * Set a field value
      * @param string $name
      * @param mixed $value
