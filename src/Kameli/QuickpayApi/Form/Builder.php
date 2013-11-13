@@ -187,6 +187,16 @@ abstract class Builder
     }
 
     /**
+     * Enable auto fee
+     * @return $this
+     */
+    public function enableAutofee() {
+        $this->setField('autofee', 1);
+
+        return $this;
+    }
+
+    /**
      * Enable test mode
      * @return $this
      */
