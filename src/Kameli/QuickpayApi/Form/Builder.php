@@ -11,19 +11,19 @@ abstract class Builder
      * The protocol version
      * @var int
      */
-    protected $protocol = 7;
-
-    /**
-     * Test mode status
-     * @var int
-     */
-    protected $testmode = 0;
+    const PROTOCOL_VERSION = 7;
 
     /**
      * The Quickpay ID
      * @var int
      */
-    protected $merchant;
+    protected static $quickpayId;
+
+    /**
+     * The MD5 string to ensure data integrity
+     * @var string
+     */
+    protected static $md5check;
 
     /**
      * The md5 checksum
@@ -35,13 +35,15 @@ abstract class Builder
      * The form fields
      * @var array
      */
-    protected $fields = [];
+    protected $fields = array(
+        'testmode' => 0
+    );
 
     /**
      * The custom form fields
      * @var array
      */
-    protected $customFields = [];
+    protected $customFields = array();
 
     /**
      * The fields to include in the md5 checksum
@@ -71,21 +73,31 @@ abstract class Builder
     );
 
     /**
-     * Make a new form builder object from the Quickpay account information
-     * @param int $quickpayID
-     * @param string $md5check
+     * Create a new form builder object from the Quickpay account information
+     * @param int|null $quickpayId
+     * @param string|null $md5check
      */
-    public function __construct($quickpayID, $md5check) {
-        $this->merchant = $quickpayID;
-        $this->md5Check = $md5check;
+    public function __construct($quickpayId = null, $md5check = null) {
+        $this->md5Check = $md5check ? $md5check : static::$md5check;
+
+        $this->fields['protocol'] = static::PROTOCOL_VERSION;
+        $this->fields['merchant'] = $quickpayId ? $quickpayId : static::$quickpayId;
     }
 
     /**
-     * Get the form action
-     * @return string
+     * Set the Quickpay ID
+     * @param int $quickpayId
      */
-    public function getAction() {
-        return static::FORM_ACTION;
+    public static function setQuickpayId($quickpayId) {
+        static::$quickpayId = $quickpayId;
+    }
+
+    /**
+     * Set the MD5 check string
+     * @param string $md5check
+     */
+    public static function setMd5Check($md5check) {
+        static::$md5check = $md5check;
     }
 
     /**
@@ -94,9 +106,7 @@ abstract class Builder
      * @return $this
      */
     public function setLanguage($code) {
-        $this->setField('language', $code);
-
-        return $this;
+        return $this->setField('language', $code);
     }
 
     /**
@@ -105,9 +115,7 @@ abstract class Builder
      * @return $this
      */
     public function setOrdernumber($ordernumber) {
-        $this->setField('ordernumber', $ordernumber);
-
-        return $this;
+        return $this->setField('ordernumber', $ordernumber);
     }
 
     /**
@@ -116,9 +124,7 @@ abstract class Builder
      * @return $this
      */
     public function setAmount($amount) {
-        $this->setField('amount', $amount);
-
-        return $this;
+        return $this->setField('amount', $amount);
     }
 
     /**
@@ -127,9 +133,7 @@ abstract class Builder
      * @return $this
      */
     public function setCurrency($currency) {
-        $this->setField('currency', $currency);
-
-        return $this;
+        return $this->setField('currency', $currency);
     }
 
     /**
@@ -138,9 +142,7 @@ abstract class Builder
      * @return $this
      */
     public function setContinueUrl($url) {
-        $this->setField('continueurl', $url);
-
-        return $this;
+        return $this->setField('continueurl', $url);
     }
 
     /**
@@ -149,9 +151,7 @@ abstract class Builder
      * @return $this
      */
     public function setCancelUrl($url) {
-        $this->setField('cancelurl', $url);
-
-        return $this;
+        return $this->setField('cancelurl', $url);
     }
 
     /**
@@ -160,9 +160,16 @@ abstract class Builder
      * @return $this
      */
     public function setCallbackUrl($url) {
-        $this->setField('callbackurl', $url);
+        return $this->setField('callbackurl', $url);
+    }
 
-        return $this;
+    /**
+     * Lock to card type. Multiple card types allowed by comma separation.
+     * @param string $cards
+     * @return $this
+     */
+    public function setCardTypeLock($cards) {
+        return $this->setField('cardtypelock', $cards);
     }
 
     /**
@@ -171,9 +178,16 @@ abstract class Builder
      * @return $this
      */
     public function setDescription($description) {
-        $this->setField('description', $description);
+        return $this->setField('description', $description);
+    }
 
-        return $this;
+    /**
+     * Transaction deadline in seconds from request to QuickPay is made.
+     * @param int $seconds
+     * @return $this
+     */
+    public function setDeadline($seconds) {
+        return $this->setField('deadline', $seconds);
     }
 
     /**
@@ -181,9 +195,7 @@ abstract class Builder
      * @return $this
      */
     public function enableAutocapture() {
-        $this->setField('autocapture', 1);
-
-        return $this;
+        return $this->setField('autocapture', 1);
     }
 
     /**
@@ -191,9 +203,7 @@ abstract class Builder
      * @return $this
      */
     public function enableAutofee() {
-        $this->setField('autofee', 1);
-
-        return $this;
+        return $this->setField('autofee', 1);
     }
 
     /**
@@ -201,9 +211,31 @@ abstract class Builder
      * @return $this
      */
     public function enableTestmode() {
-        $this->testmode = 1;
+        return $this->setField('testmode', 1);
+    }
 
-        return $this;
+    /**
+     * Enable split payment on transaction
+     * @return $this
+     */
+    public function enableSplitPayment() {
+        return $this->setField('splitpayment', 1);
+    }
+
+    /**
+     * Include cardhash in response.
+     * @return $this
+     */
+    public function includeCardHash() {
+        return $this->setField('cardhash', 1);
+    }
+
+    /**
+     * Force showing mobile form.
+     * @return $this
+     */
+    public function forceMobile() {
+        return $this->setField('forcemobile', 1);
     }
 
     /**
@@ -233,16 +265,21 @@ abstract class Builder
     }
 
     /**
+     * Set a custom field value
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function setCustom($name, $value) {
+        $this->customFields['CUSTOM_'.$name] = $value;
+
+        return $this;
+    }
+
+    /**
      * Prepare the fields and calculate the md5 checksum
      */
     protected function prepareFields() {
-        $reservedFields = array('protocol', 'merchant', 'testmode');
-
-        foreach ($reservedFields as $field) {
-            $this->fields[$field] = $this->$field;
-        }
-
-        // Sort for MD5 calculation
         $sorted = [];
 
         foreach (static::$md5checkFields as $field) {
@@ -251,16 +288,24 @@ abstract class Builder
             }
         }
 
-        $sorted['md5check'] = md5(implode("", $sorted) . $this->md5Check);
+        $sorted['md5check'] = md5(implode('', $sorted) . $this->md5Check);
 
         $this->fields = $sorted;
     }
 
     /**
-     * Get the form fields
+     * Get the form action
      * @return string
      */
-    public function getFields() {
+    public function getFormAction() {
+        return static::FORM_ACTION;
+    }
+
+    /**
+     * Get the hidden form inputs
+     * @return string
+     */
+    public function getFormInputs() {
         $this->prepareFields();
 
         $html = '';
@@ -271,25 +316,5 @@ abstract class Builder
         }
 
         return $html;
-    }
-
-    /**
-     * Alias for getFields
-     * @return string
-     */
-    public function getFormFields() {
-        return $this->getFields();
-    }
-
-    /**
-     * Set a custom field value
-     * @param string $name
-     * @param mixed $value
-     * @return $this
-     */
-    public function setCustom($name, $value) {
-        $this->customFields['CUSTOM_'.$name] = $value;
-
-        return $this;
     }
 }
