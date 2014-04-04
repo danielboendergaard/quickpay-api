@@ -277,8 +277,7 @@ abstract class Builder
      */
     public function setFields($inputFields)
     {
-        foreach ($inputFields as $key => $value)
-        {
+        foreach ($inputFields as $key => $value) {
             $this->setField($key, $value);
         }
 
