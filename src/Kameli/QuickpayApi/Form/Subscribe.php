@@ -7,7 +7,8 @@ class Subscribe extends Builder
      * @param int|null $quickpayId
      * @param string|null $md5check
      */
-    public function __construct($quickpayId = null, $md5check = null) {
+    public function __construct($quickpayId = null, $md5check = null)
+    {
         parent::__construct($quickpayId, $md5check);
         $this->setField('msgtype', 'subscribe');
     }
@@ -17,7 +18,8 @@ class Subscribe extends Builder
      * @param string $group
      * @return $this
      */
-    public function setGroup($group) {
+    public function setGroup($group)
+    {
         return $this->setField('group', $group);
     }
 }

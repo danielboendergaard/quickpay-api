@@ -77,7 +77,8 @@ abstract class Builder
      * @param int|null $quickpayId
      * @param string|null $md5check
      */
-    public function __construct($quickpayId = null, $md5check = null) {
+    public function __construct($quickpayId = null, $md5check = null)
+    {
         $this->md5Check = $md5check ? $md5check : static::$md5check;
 
         $this->fields['protocol'] = static::PROTOCOL_VERSION;
@@ -88,7 +89,8 @@ abstract class Builder
      * Set the Quickpay ID
      * @param int $quickpayId
      */
-    public static function setQuickpayId($quickpayId) {
+    public static function setQuickpayId($quickpayId)
+    {
         static::$quickpayId = $quickpayId;
     }
 
@@ -96,7 +98,8 @@ abstract class Builder
      * Set the MD5 check string
      * @param string $md5check
      */
-    public static function setMd5Check($md5check) {
+    public static function setMd5Check($md5check)
+    {
         static::$md5check = $md5check;
     }
 
@@ -105,7 +108,8 @@ abstract class Builder
      * @param string $code
      * @return $this
      */
-    public function setLanguage($code) {
+    public function setLanguage($code)
+    {
         return $this->setField('language', $code);
     }
 
@@ -114,7 +118,8 @@ abstract class Builder
      * @param string $ordernumber
      * @return $this
      */
-    public function setOrdernumber($ordernumber) {
+    public function setOrdernumber($ordernumber)
+    {
         return $this->setField('ordernumber', $ordernumber);
     }
 
@@ -123,7 +128,8 @@ abstract class Builder
      * @param int $amount
      * @return $this
      */
-    public function setAmount($amount) {
+    public function setAmount($amount)
+    {
         return $this->setField('amount', $amount);
     }
 
@@ -132,7 +138,8 @@ abstract class Builder
      * @param string $currency
      * @return $this
      */
-    public function setCurrency($currency) {
+    public function setCurrency($currency)
+    {
         return $this->setField('currency', $currency);
     }
 
@@ -141,7 +148,8 @@ abstract class Builder
      * @param string $url
      * @return $this
      */
-    public function setContinueUrl($url) {
+    public function setContinueUrl($url)
+    {
         return $this->setField('continueurl', $url);
     }
 
@@ -150,7 +158,8 @@ abstract class Builder
      * @param string $url
      * @return $this
      */
-    public function setCancelUrl($url) {
+    public function setCancelUrl($url)
+    {
         return $this->setField('cancelurl', $url);
     }
 
@@ -159,7 +168,8 @@ abstract class Builder
      * @param string $url
      * @return $this
      */
-    public function setCallbackUrl($url) {
+    public function setCallbackUrl($url)
+    {
         return $this->setField('callbackurl', $url);
     }
 
@@ -168,7 +178,8 @@ abstract class Builder
      * @param string $cards
      * @return $this
      */
-    public function setCardTypeLock($cards) {
+    public function setCardTypeLock($cards)
+    {
         return $this->setField('cardtypelock', $cards);
     }
 
@@ -177,7 +188,8 @@ abstract class Builder
      * @param string $description
      * @return $this
      */
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         return $this->setField('description', $description);
     }
 
@@ -186,7 +198,8 @@ abstract class Builder
      * @param int $seconds
      * @return $this
      */
-    public function setDeadline($seconds) {
+    public function setDeadline($seconds)
+    {
         return $this->setField('deadline', $seconds);
     }
 
@@ -194,7 +207,8 @@ abstract class Builder
      * Enable auto capture
      * @return $this
      */
-    public function enableAutocapture() {
+    public function enableAutocapture()
+    {
         return $this->setField('autocapture', 1);
     }
 
@@ -202,7 +216,8 @@ abstract class Builder
      * Enable auto fee
      * @return $this
      */
-    public function enableAutofee() {
+    public function enableAutofee()
+    {
         return $this->setField('autofee', 1);
     }
 
@@ -210,7 +225,8 @@ abstract class Builder
      * Enable test mode
      * @return $this
      */
-    public function enableTestmode() {
+    public function enableTestmode()
+    {
         return $this->setField('testmode', 1);
     }
 
@@ -218,7 +234,8 @@ abstract class Builder
      * Enable split payment on transaction
      * @return $this
      */
-    public function enableSplitPayment() {
+    public function enableSplitPayment()
+    {
         return $this->setField('splitpayment', 1);
     }
 
@@ -226,7 +243,8 @@ abstract class Builder
      * Include cardhash in response.
      * @return $this
      */
-    public function includeCardHash() {
+    public function includeCardHash()
+    {
         return $this->setField('cardhash', 1);
     }
 
@@ -234,7 +252,8 @@ abstract class Builder
      * Force showing mobile form.
      * @return $this
      */
-    public function forceMobile() {
+    public function forceMobile()
+    {
         return $this->setField('forcemobile', 1);
     }
 
@@ -244,7 +263,8 @@ abstract class Builder
      * @param mixed $value
      * @return $this
      */
-    public function setField($name, $value) {
+    public function setField($name, $value)
+    {
         $this->fields[$name] = $value;
 
         return $this;
@@ -255,7 +275,8 @@ abstract class Builder
      * @param array $inputFields
      * @return $this
      */
-    public function setFields($inputFields) {
+    public function setFields($inputFields)
+    {
         foreach ($inputFields as $key => $value)
         {
             $this->setField($key, $value);
@@ -270,7 +291,8 @@ abstract class Builder
      * @param mixed $value
      * @return $this
      */
-    public function setCustom($name, $value) {
+    public function setCustom($name, $value)
+    {
         $this->customFields['CUSTOM_'.$name] = $value;
 
         return $this;
@@ -279,7 +301,8 @@ abstract class Builder
     /**
      * Prepare the fields and calculate the md5 checksum
      */
-    protected function prepareFields() {
+    protected function prepareFields()
+    {
         $sorted = [];
 
         foreach (static::$md5checkFields as $field) {
@@ -297,7 +320,8 @@ abstract class Builder
      * Get the form action
      * @return string
      */
-    public function getFormAction() {
+    public function getFormAction()
+    {
         return static::FORM_ACTION;
     }
 
@@ -305,13 +329,13 @@ abstract class Builder
      * Get the hidden form inputs
      * @return string
      */
-    public function getFormInputs() {
+    public function getFormInputs()
+    {
         $this->prepareFields();
 
         $html = '';
 
-        foreach(array_merge($this->fields, $this->customFields) as $key => $value)
-        {
+        foreach (array_merge($this->fields, $this->customFields) as $key => $value) {
             $html .= '<input type="hidden" name="'.$key.'" value="'.$value.'">';
         }
 
