@@ -1,6 +1,8 @@
 <?php namespace Kameli\QuickpayApi\Form;
 
-abstract class Builder
+use Kameli\QuickpayApi\QuickpayApi;
+
+abstract class Builder extends QuickpayApi
 {
     /**
      * The URL for the form action
@@ -12,18 +14,6 @@ abstract class Builder
      * @var int
      */
     const PROTOCOL_VERSION = 7;
-
-    /**
-     * The Quickpay ID
-     * @var int
-     */
-    protected static $quickpayId;
-
-    /**
-     * The MD5 string to ensure data integrity
-     * @var string
-     */
-    protected static $md5check;
 
     /**
      * The md5 checksum
@@ -83,24 +73,6 @@ abstract class Builder
 
         $this->fields['protocol'] = static::PROTOCOL_VERSION;
         $this->fields['merchant'] = $quickpayId ? $quickpayId : static::$quickpayId;
-    }
-
-    /**
-     * Set the Quickpay ID
-     * @param int $quickpayId
-     */
-    public static function setQuickpayId($quickpayId)
-    {
-        static::$quickpayId = $quickpayId;
-    }
-
-    /**
-     * Set the MD5 check string
-     * @param string $md5check
-     */
-    public static function setMd5Check($md5check)
-    {
-        static::$md5check = $md5check;
     }
 
     /**
