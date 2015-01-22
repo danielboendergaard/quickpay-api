@@ -3,12 +3,6 @@
 class Response extends \Kameli\Quickpay\Response
 {
     /**
-     * The MD5 string to ensure data integrity
-     * @var string
-     */
-    protected static $md5check;
-
-    /**
      * Fields in the response
      * @var array
      */
