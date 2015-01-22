@@ -1,4 +1,4 @@
-<?php namespace Kameli\QuickpayApi;
+<?php namespace Kameli\Quickpay;
 
 class Exception extends \Exception
 {
