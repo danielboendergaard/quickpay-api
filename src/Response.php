@@ -1,6 +1,6 @@
 <?php namespace Kameli\Quickpay;
 
-abstract class Response extends Quickpay
+abstract class Response
 {
     /**
      * The response status codes

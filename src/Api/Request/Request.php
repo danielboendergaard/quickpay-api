@@ -1,11 +1,13 @@
 <?php namespace Kameli\Quickpay\Api\Request;
 
 use Kameli\Quickpay\Api\Response;
+use Kameli\Quickpay\Configuration;
 use Kameli\Quickpay\Exception;
-use Kameli\Quickpay\Quickpay;
 
-abstract class Request extends Quickpay
+abstract class Request
 {
+    use Configuration;
+
     /**
      * Quickpay API Version
      */
@@ -48,12 +50,12 @@ abstract class Request extends Quickpay
      */
     public function __construct($quickpayId = null, $md5check = null, $apiUrl = null)
     {
-        $this->requestData = $this->createInitialData($quickpayId ? $quickpayId : static::$quickpayId);
-        $this->md5check = $md5check ? $md5check : static::$md5check;
+        $this->requestData = $this->createInitialData($quickpayId ? $quickpayId : static::$defaultQuickpayId);
+        $this->md5check = $md5check ? $md5check : static::$defaultMd5check;
         $this->apiUrl = $apiUrl ? $apiUrl : self::API_URL;
 
-        if (static::$apiKey) {
-            $this->setApiKey(static::$apiKey);
+        if (static::$defaultApiKey) {
+            $this->setApiKey(static::$defaultApiKey);
         }
 
         $this->setupCurl();

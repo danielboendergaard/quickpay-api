@@ -1,7 +1,11 @@
 <?php namespace Kameli\Quickpay\Form;
 
+use Kameli\Quickpay\Configuration;
+
 class Response extends \Kameli\Quickpay\Response
 {
+    use Configuration;
+
     /**
      * Fields in the response
      * @var array
@@ -79,7 +83,7 @@ class Response extends \Kameli\Quickpay\Response
      */
     public function isValid($md5check = null)
     {
-        $md5check = $md5check ? $md5check : static::$md5check;
+        $md5check = $md5check ? $md5check : static::$defaultMd5check;
 
         $md5string = '';
 

@@ -1,9 +1,11 @@
 <?php namespace Kameli\Quickpay\Form;
 
-use Kameli\Quickpay\Quickpay;
+use Kameli\Quickpay\Configuration;
 
-abstract class Builder extends Quickpay
+abstract class Builder
 {
+    use Configuration;
+
     /**
      * The URL for the form action
      */
@@ -69,10 +71,10 @@ abstract class Builder extends Quickpay
      */
     public function __construct($quickpayId = null, $md5check = null)
     {
-        $this->md5Check = $md5check ? $md5check : static::$md5check;
+        $this->md5Check = $md5check ? $md5check : static::$defaultMd5check;
 
         $this->setField('protocol', static::PROTOCOL_VERSION);
-        $this->setField('merchant', $quickpayId ? $quickpayId : static::$quickpayId);
+        $this->setField('merchant', $quickpayId ? $quickpayId : static::$defaultQuickpayId);
     }
 
     /**
