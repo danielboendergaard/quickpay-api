@@ -9,7 +9,7 @@ class Subscribe extends Request
 	 * @param boolean $apiUrl
 	 * @param boolean $verifySSL
 	 */
-    public function __construct($quickpayId, $md5check, $apiUrl = false, $verifySSL = true)
+    public function __construct($quickpayId = null, $md5check = null, $apiUrl = false, $verifySSL = true)
     {
         parent::__construct($quickpayId, $md5check, $apiUrl, $verifySSL);
         $this->setField('msgtype', 'subscribe');
